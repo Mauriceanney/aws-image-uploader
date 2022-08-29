@@ -1,28 +1,39 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import './App.css';
 import axios from "axios";
 
+
 const UserProfiles = () => {
-  const fetchUserProfiles = () => {
-    axios.get("http://localhost:8080/api/v1/user-profile")
-        .then(res => console.log(res))
-  }
+    const [userProfiles, setUserProfiles] = useState([]);
 
-  useEffect(() => {
-    fetchUserProfiles();
-  }, []);
+    const fetchUserProfiles = () => {
+        axios.get("http://localhost:8080/api/v1/user-profile")
+            .then(res => {
+                setUserProfiles(res.data)
+            })
+    }
 
-  return <h1>Hello</h1>;
+    useEffect(() => {
+        fetchUserProfiles();
+    }, []);
+
+    return userProfiles.map((userProfile, index) => {
+        return (
+            <div key={index}>
+                <h1>{userProfile.userName}</h1>
+                <p>{userProfile.userProfileId}</p>
+            </div>
+        )
+    })
 }
 
 
-
 function App() {
-  return (
-    <div className="App">
-      <UserProfiles/>
-    </div>
-  );
+    return (
+        <div className="App">
+            <UserProfiles/>
+        </div>
+    );
 }
 
 export default App;
