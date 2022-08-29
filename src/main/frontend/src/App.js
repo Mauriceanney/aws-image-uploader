@@ -44,7 +44,7 @@ function Dropzone({ userProfileId }) {
             formData,
             {
                 headers: {
-                    "Content-Type" : "multipart/form-data"
+                    "Content-Type": "multipart/form-data"
                 }
             }
         ).then(() => console.log('file uploaded successfully...'))
