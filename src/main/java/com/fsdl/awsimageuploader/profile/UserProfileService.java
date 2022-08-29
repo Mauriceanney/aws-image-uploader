@@ -22,6 +22,10 @@ public class UserProfileService {
     }
 
     public void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
-
+        // 1. check if image is not empty
+        // 2. Check if file is an image
+        // 3. Check if the user exists in our database
+        // 4. Grab some metadata from file if any
+        // 5. Store image in s3 and updatye database (UserProfileImageLink) with s3 image link
     }
 }
