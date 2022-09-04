@@ -34,17 +34,33 @@ public class UserProfileService {
         // 3. Check if the user exists in our database
         UserProfile user = getUserProfileOrThrow(userProfileId);
         // 4. Grab some metadata from file if any
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("Content-Type", file.getContentType());
-        metadata.put("Content-length", String.valueOf(file.getSize()));
+        Map<String, String> metadata = extractMetaDadata(file);
         // 5. Store image in s3 and updatye database (UserProfileImageLink) with s3 image link
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), user.getUserProfileId());
-        String fileName = String.format("%s-%s", file.getName(), UUID.randomUUID());
+        String fileName = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
         try{
             fileStore.save(path, fileName, Optional.of(metadata), file.getInputStream());
+            user.setUserProfileImageLink(fileName);
         }catch (IOException e){
             throw new IllegalStateException(e);
         }
+    }
+
+    byte[] downloadUserProfileImage(UUID userProfileId) {
+        UserProfile user =  getUserProfileOrThrow(userProfileId);
+        String path = String.format("%s/%s",
+                BucketName.PROFILE_IMAGE.getBucketName(),
+                user.getUserProfileId());
+        return user.getUserProfileImageLink()
+                    .map(key -> fileStore.download(path, key))
+                .orElse(new byte[0]);
+    }
+
+    private static Map<String, String> extractMetaDadata(MultipartFile file) {
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", file.getContentType());
+        metadata.put("Content-length", String.valueOf(file.getSize()));
+        return metadata;
     }
 
     private UserProfile getUserProfileOrThrow(UUID userProfileId) {
