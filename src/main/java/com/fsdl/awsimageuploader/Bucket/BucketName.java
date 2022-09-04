@@ -2,7 +2,7 @@ package com.fsdl.awsimageuploader.Bucket;
 
 public enum BucketName {
 
-    PROFILE_IMAGE("fsdl-file-uploader");
+    PROFILE_IMAGE("springboot-react-user-profiles-images");
 
     private final String bucketName;
 

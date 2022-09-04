@@ -3,7 +3,6 @@ import {useDropzone} from 'react-dropzone'
 import './App.css';
 import axios from "axios";
 
-
 const UserProfiles = () => {
     const [userProfiles, setUserProfiles] = useState([]);
 
@@ -21,6 +20,11 @@ const UserProfiles = () => {
     return userProfiles.map((userProfile, index) => {
         return (
             <div key={index}>
+                {userProfile.userProfileId
+                    ? (<img
+                            src={`http://localhost:8080/api/v1/user-profile/${userProfile.userProfileId}/image/download`}
+                            alt={userProfile.userProfileId} />)
+                    : null}
                 {/* TODO: profile image her*/}
                 <br/>
                 <br/>
@@ -65,7 +69,6 @@ function Dropzone({ userProfileId }) {
         </div>
     )
 }
-
 
 function App() {
     return (
